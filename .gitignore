@@ -11,5 +11,7 @@
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
-accountservice-linux-amd64
 *.db
+accountservice/accountservice-linux-amd64
+accountservice/healthcheck-linux-amd64
+healthcheck/healthcheck-linux-amd64
