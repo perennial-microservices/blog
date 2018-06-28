@@ -15,8 +15,9 @@ func main() {
 }
 
 func initializeBoltClient() {
-	service.DBClient = &dbclient.BoltClient{}
-	service.DBClient.OpenBoltDb()
+	//service.DBClient = &dbclient.BoltClient{}
+	//service.DBClient.OpenBoltDb()
+	service.DBClient = &dbclient.RedisClient{}
+	service.DBClient.StartRedis()
 	service.DBClient.Seed()
-
 }

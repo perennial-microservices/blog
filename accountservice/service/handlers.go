@@ -1,14 +1,16 @@
 package service
 
 import (
-	"github.com/perennial-microservices/blog/accountservice/dbclient"
 	"net/http"
 	"github.com/gorilla/mux"
 	"encoding/json"
 	"strconv"
+	"fmt"
+	"github.com/perennial-microservices/blog/accountservice/dbclient"
 )
 
-var DBClient dbclient.IBoltClient
+//var DBClient dbclient.IBoltClient
+var DBClient dbclient.IRedisClient
 
 func GetAccount(w http.ResponseWriter, r *http.Request) {
 
@@ -30,13 +32,28 @@ func GetAccount(w http.ResponseWriter, r *http.Request) {
 
 func HealthCheck(w http.ResponseWriter, r *http.Request) {
 	dbUp := DBClient.Check()
-	if dbUp {
+	if dbUp && isHealthy {
 		data, _ := json.Marshal(healthCheckResponse{Status: "UP"})
 		writeJsonResponse(w, http.StatusOK, data)
 	} else {
 		data, _ := json.Marshal(healthCheckResponse{Status: "Database unaccessible"})
 		writeJsonResponse(w, http.StatusServiceUnavailable, data)
 	}
+}
+
+var isHealthy = true
+
+func SetHealthyState(w http.ResponseWriter, r *http.Request) {
+	var state, err = strconv.ParseBool(mux.Vars(r)["state"])
+
+	if err != nil {
+		fmt.Println("Invalid request to SetHealthyState, allowed values are true or false")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	isHealthy = state
+	w.WriteHeader(http.StatusOK)
 }
 
 func writeJsonResponse(w http.ResponseWriter, status int, data []byte) {
