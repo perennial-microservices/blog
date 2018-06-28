@@ -18,5 +18,4 @@ func initializeBoltClient() {
 	service.DBClient = &dbclient.BoltClient{}
 	service.DBClient.OpenBoltDb()
 	service.DBClient.Seed()
-
 }
