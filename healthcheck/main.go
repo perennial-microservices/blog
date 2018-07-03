@@ -4,6 +4,7 @@ import (
 	"flag"
 	"net/http"
 	"os"
+	"fmt"
 )
 
 func main() {
@@ -13,6 +14,7 @@ func main() {
 	resp, err := http.Get("http://127.0.0.1:" + *port + "/health")
 
 	if err != nil || resp.StatusCode != 200 {
+		fmt.Println("Error");
 		os.Exit(1)
 	}
 	os.Exit(0)

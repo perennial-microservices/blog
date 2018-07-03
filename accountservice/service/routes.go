@@ -1,29 +1,36 @@
 package service
 
-import "net/http"
+import . "github.com/perennial-microservices/blog/service"
 
-type Route struct {
-	Name		string
-	Method		string
-	Pattern		string
-	HandlerFunc	http.HandlerFunc
-}
-
-type Routes []Route
-
-var routes = Routes{
+var AccountRoutes = Routes {
+	Route {
+		"CreateAccount",
+		"POST",
+		"/accounts",
+		CreateAccount,
+	},
+	Route {
+		"GetAccounts",
+		"GET",
+		"/accounts",
+		GetAccounts,
+	},
 	Route{
-		"GetAccount",            //Name
-		"GET",                   //HTTP method
-		"/accounts/{accountId}", //Route pattern
+		"GetAccount",
+		"GET",
+		"/accounts/{accountId}",
 		GetAccount,
 	},
 	Route {
-		"HealthCheck",
-		"GET",
-		"/health",
-		HealthCheck,
+		"UpdateAccount",
+		"PUT",
+		"/accounts/{accountId}",
+		UpdateAccount,
+	},
+	Route {
+		"DeleteAccount",
+		"DELETE",
+		"/accounts/{accountId}",
+		DeleteAccount,
 	},
 }
-
-

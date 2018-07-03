@@ -1,20 +1,33 @@
 package service
 
 import (
-	"github.com/perennial-microservices/blog/accountservice/dbclient"
+	"github.com/perennial-microservices/blog/dbclient"
 	"net/http"
 	"github.com/gorilla/mux"
 	"encoding/json"
 	"strconv"
+	"github.com/perennial-microservices/blog/accountservice/model"
+	blogService "github.com/perennial-microservices/blog/service"
 )
 
 var DBClient dbclient.IBoltClient
 
-func GetAccount(w http.ResponseWriter, r *http.Request) {
+func CreateAccount(w http.ResponseWriter, r *http.Request) {
 
+}
+
+func GetAccounts(w http.ResponseWriter, r *http.Request) {
+
+}
+
+func GetAccount(w http.ResponseWriter, r *http.Request) {
 	var accountId = mux.Vars(r)["accountId"]
 
-	account, err := DBClient.QueryAccount(accountId)
+	result, err := DBClient.GetOne(accountId)
+
+	account, _ := result.(model.Account)
+
+	account.ServedBy = blogService.GetIP()
 
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
@@ -28,24 +41,10 @@ func GetAccount(w http.ResponseWriter, r *http.Request) {
 	w.Write(data)
 }
 
-func HealthCheck(w http.ResponseWriter, r *http.Request) {
-	dbUp := DBClient.Check()
-	if dbUp {
-		data, _ := json.Marshal(healthCheckResponse{Status: "UP"})
-		writeJsonResponse(w, http.StatusOK, data)
-	} else {
-		data, _ := json.Marshal(healthCheckResponse{Status: "Database unaccessible"})
-		writeJsonResponse(w, http.StatusServiceUnavailable, data)
-	}
+func UpdateAccount(w http.ResponseWriter, r *http.Request) {
+
 }
 
-func writeJsonResponse(w http.ResponseWriter, status int, data []byte) {
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Content-Length", strconv.Itoa(len(data)))
-	w.WriteHeader(status)
-	w.Write(data)
-}
+func DeleteAccount(w http.ResponseWriter, r *http.Request) {
 
-type healthCheckResponse struct {
-	Status string `json:"status"`
 }

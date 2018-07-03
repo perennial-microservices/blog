@@ -5,10 +5,15 @@ import (
 	"net/http"
 )
 
+var routes = Routes{}
+
+func AttachRoutes(routes Routes) {
+	routes = append(routes, routes...)
+}
+
 func StartWebServer(port string) {
 	log.Println("Starting HTTP service at " + port)
-	r:= NewRouter()
-	http.Handle("/", r)
+	http.Handle("/", NewRouter(routes))
 	err := http.ListenAndServe(":" + port, nil)
 	if err != nil {
 		log.Println("An error occured starting HTTP listener at port " + port)
